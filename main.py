@@ -1,22 +1,13 @@
-from random import randint
+from random import randint, random
 
-from models import Person, Chif
-
+from models import Person, Population
 
 
 year = 0
-population = []
-while 5:
+velaribo = Population()
+
+while year <= 10:
     print('year: ' + str(year))
     year += 1
-    population_growth = randint(0, 50)
-    
-    for i in range(population_growth):
-        new_person = Person(age=0)
-        population.append(new_person)
-    print(len(population) )
-
-
-
-
-
+    velaribo.growth_population()
+    print(str(len(velaribo.population_list)) + ': (+' + str(velaribo.population_growth) + ')')

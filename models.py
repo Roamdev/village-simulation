@@ -1,27 +1,42 @@
-from random import randint
+from random import randint, random, choice
 import names
 
 
 class Person:
-    def __init__(self, age=0, gender=True, best_friend=None):
-        self.name = names.get_full_name()
-        self.age = age
-        self.gender = gender
+    def __init__(self, newborn, best_friend=None):
+        self.name = names.get_full_name(gender=choice(["male", "female"]))
         self.best_friend = best_friend
         self.alcohol = True
+        if newborn:
+            self.age = 0
+        else:
+            self.age = randint(18,45)
+        
+    def init_age(self):
+        self.__init__()
 
     def die(self):
         del self
 
-new_person1 = Person(age=15)
-new_person2 = Person(age=14, best_friend=new_person1)
-print(new_person1.name)
-print(randint(1, 666))
 
-new_person1.die()
-print(new_person2.name)
+class Population:
+    def __init__(self, population_growth=None):
+        self.population_list = []
+        for i in range(150):
+            new_person = Person(newborn=False)
+            self.population_list.append(new_person)
+        self.population_growth = population_growth
 
-
-class Chif(Person):
+    def growth_population(self):
+        self.population_growth = randint(int(len(self.population_list) * .1), int(len(self.population_list) * .3))
+        for i in range(self.population_growth):
+            newborn_chance = random()
+            if newborn_chance > .3:
+                newborn_chance = True
+            else:
+                newborn_chance = False
+            new_person = Person(newborn=newborn_chance)
+            self.population_list.append(new_person)
+class Chief(Person):
     """pass"""
     pass
