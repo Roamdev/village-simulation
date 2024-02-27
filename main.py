@@ -16,6 +16,7 @@ def change_year(village, village_name):
 change_year(Population(), 'Villariba')
 change_year(Population(), 'Villabajo')
 
+
 # age = 0
 # health = 0
 # while True:
