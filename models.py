@@ -1,5 +1,6 @@
 from random import randint, random, choice
 import names
+from db import DataBase
 import psycopg2
 
 
@@ -24,6 +25,8 @@ class Person:
             self.age = 0
         else:
             self.age = randint(18, 45)
+
+
 
     def person_change(self):
         thousand_chance = randint(0,1000)
@@ -74,7 +77,10 @@ class Person:
     
     def die(self):
         del self
-
+    
+    db = DataBase()
+    db.insert_person(self.gender, self.name, self.population, self.best_friend, self.alcohol,
+                     self.sport, self.partner, self.never_given_birth, self.born_counter)
 
 class Population:
     def __init__(self, name, population_growth=None):
@@ -84,10 +90,6 @@ class Population:
             new_person = Person(newborn=False)
             self.population_list.append(new_person)
         self.population_growth = population_growth
-
-
-        # conn = psycopg2.connect(dbname="postgres", user="postgres", password="123456", host="127.0.0.1", port="5432")
-        # print("Подключение установлено")
 
     def growth_population(self):
         self.population_growth = randint(int(len(self.population_list) * .1), int(len(self.population_list) * .3))
