@@ -1,13 +1,23 @@
 from random import randint, random, choice
 import names
+from db import DataBase
+import psycopg2
+
+db = DataBase()
 
 
 class Person:
-    def __init__(self, newborn, best_friend=None):
-        self.name = names.get_full_name(gender=choice(["male", "female"]))
+    def __init__(self, newborn, population=None, best_friend=None):
+        self.gender = choice(["male", "female"])
+        self.name = names.get_full_name(gender=self.gender)
+        self.population = population
         self.best_friend = best_friend
         self.alcohol = choice([True, False])
         self.death = False
+        self.sport = False
+        self.partner = None
+        self.never_given_birth = None
+        self.born_counter = 0
         percent_chance = randint(0, 100)
         if newborn and (percent_chance == 14 or percent_chance == 88):
             self.health = choice([999, 1000])
@@ -18,13 +28,64 @@ class Person:
         else:
             self.age = randint(18, 45)
 
+        db.insert_person(self.gender, self.name, self.population, self.best_friend, self.alcohol,
+                         self.sport, self.partner, self.never_given_birth, self.born_counter)
+
+    def person_change(self):
+        thousand_chance = randint(0, 1000)
+        if thousand_chance == 666:
+            self.death = True
+        if thousand_chance <= 300:
+            self.sport = True
+        if thousand_chance > 300:
+            self.sport = False
+        if self.age > 13 and 250 <= thousand_chance <= 625:
+            self.alcohol = True
+        if thousand_chance > 625:
+            self.alcohol = False
+        if self.gender == 'female':
+            if self.partner and thousand_chance > 950:
+                self.partner = False
+                self.partner.partner = False
+            if self.never_given_birth and self.partner and self.born_counter < 3:
+                self.born_counter += 1
+            if self.born_counter == 3:
+                self.population.population_list.append(Person(newborn=True, population=self.population))
+                self.born_counter = 0
+
+    def manage_health(self):
+        if self.sport:
+            sport_mod = randint(-6, -2)
+        else:
+            sport_mod = 0
+        if self.alcohol:
+            alcohol_mod = randint(-1, 6)
+        else:
+            alcohol_mod = 0
+        self.age += 1
+        if self.age < 20:
+            self.health += 5 + sport_mod + alcohol_mod
+        elif self.age < 35:
+            self.health += 8 + int(sport_mod * 1.4) + int(alcohol_mod * 1.6)
+        elif self.age < 45:
+            self.health += 12 + int(sport_mod * 1.5) + int(alcohol_mod * 2)
+        elif self.age < 55:
+            self.health += 15 + int(sport_mod * 1.6) + int(alcohol_mod * 2.4)
+        elif self.age < 65:
+            self.health += 18 + int(sport_mod * 1.7) + int(alcohol_mod * 3)
+        elif self.age >= 65:
+            self.health += 25 + int(sport_mod * 1.4) + int(alcohol_mod * 3)
+        if self.health >= 1000:
+            self.death = True
+    
     def die(self):
         del self
 
 
 class Population:
-    def __init__(self, population_growth=None):
+    def __init__(self, name, population_growth=None):
         self.population_list = []
+        self.name = name
         for i in range(150):
             new_person = Person(newborn=False)
             self.population_list.append(new_person)
