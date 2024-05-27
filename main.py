@@ -1,7 +1,7 @@
 from random import randint, random
 
 
-from models import Population, Person
+from models import Population
 
 
 def change_year(village, village_name):

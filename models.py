@@ -3,6 +3,8 @@ import names
 from db import DataBase
 import psycopg2
 
+db = DataBase()
+
 
 class Person:
     def __init__(self, newborn, population=None, best_friend=None):
@@ -26,10 +28,11 @@ class Person:
         else:
             self.age = randint(18, 45)
 
-
+        db.insert_person(self.gender, self.name, self.population, self.best_friend, self.alcohol,
+                         self.sport, self.partner, self.never_given_birth, self.born_counter)
 
     def person_change(self):
-        thousand_chance = randint(0,1000)
+        thousand_chance = randint(0, 1000)
         if thousand_chance == 666:
             self.death = True
         if thousand_chance <= 300:
@@ -77,10 +80,7 @@ class Person:
     
     def die(self):
         del self
-    
-    db = DataBase()
-    db.insert_person(self.gender, self.name, self.population, self.best_friend, self.alcohol,
-                     self.sport, self.partner, self.never_given_birth, self.born_counter)
+
 
 class Population:
     def __init__(self, name, population_growth=None):
